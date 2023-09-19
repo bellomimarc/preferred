@@ -1,17 +1,20 @@
-const Fastify = require("fastify");
 const path = require("path");
 const { doMath, doSomething } = require("./business");
 const { getConnectedClient } = require("./redis");
 
 const build = async (opts) => {
-  const fastify = Fastify(opts);
+  const fastify = require("fastify")(opts);
 
-  fastify.register(import("@fastify/static"), {
+  fastify.register(require("@fastify/static"), {
     root: path.join(process.cwd(), "public"),
     prefix: "/public/",
   });
 
-  fastify.decorate("redis", await getConnectedClient());
+  const redisClient = await getConnectedClient()
+  fastify.decorate("redis", redisClient);
+  fastify.addHook("onClose", () => {
+    return redisClient.disconnect()
+  })
 
   fastify.get("/", async function handler(request, reply) {
     return { hello: "world" };

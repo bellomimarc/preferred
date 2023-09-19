@@ -1,6 +1,7 @@
-"use strict";
-
+const { beforeAll } = require("@jest/globals");
 const { build } = require("./app.js");
+
+let app;
 
 jest.mock("./business.js", () => {
   return {
@@ -13,13 +14,16 @@ jest.mock("./business.js", () => {
   };
 });
 
-afterAll(() => {
+beforeAll(async () => {
+  app = await build();
+})
+
+afterAll(async () => {
   jest.restoreAllMocks();
+  await app.close()
 });
 
 it('requests the "/" route', async () => {
-  const app = build();
-
   const response = await app.inject({
     method: "GET",
     url: "/",
@@ -30,8 +34,6 @@ it('requests the "/" route', async () => {
 });
 
 it('requests the "/" route with a POST', async () => {
-  const app = build();
-
   const response = await app.inject({
     method: "POST",
     url: "/",
@@ -42,8 +44,6 @@ it('requests the "/" route with a POST', async () => {
 });
 
 it('requests the "/math" route with a POST', async () => {
-  const app = build();
-
   const response = await app.inject({
     method: "POST",
     url: "/math",

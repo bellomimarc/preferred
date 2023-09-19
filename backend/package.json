@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "env-cmd jest",
     "start": "env-cmd node index.js"
   },
   "keywords": [],
@@ -13,6 +13,7 @@
   "dependencies": {
     "@fastify/static": "^6.11.1",
     "fastify": "^4.23.0",
+    "pg": "^8.11.3",
     "redis": "^4.6.8"
   },
   "devDependencies": {

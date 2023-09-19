@@ -10,7 +10,7 @@ async function main() {
 
     await app.listen({ port: process.env.PORT });
   } catch (err) {
-    app.log.error(err);
+    console.error(err)
     process.exit(1);
   }
 }
