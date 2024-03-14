@@ -36,20 +36,24 @@ func main() {
 		},
 	})
 
+	// Recover from panics
+	app.Use(recover.New())
+
+	// Add ETag support
+	app.Use(etag.New())
+
 	// Serve static files
 	app.Static("/", "./public", fiber.Static{
 		Compress: true,
 		MaxAge:   30, // 30 seconds
 	})
-	// Recover from panics
-	app.Use(recover.New())
-	// Add ETag support
-	app.Use(etag.New())
+
 	// All routes in /api
 	api := app.Group("/api")
 	api.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
+
 	// Listen on port 3000
 	err := app.Listen(":3000")
 	if err != nil {
