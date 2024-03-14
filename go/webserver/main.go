@@ -35,7 +35,11 @@ func main() {
 		},
 	})
 
-	app.Static("/", "./public")
+	app.Static("/", "./public", fiber.Static{
+		Compress:      true,
+		CacheDuration: 10,
+		MaxAge:        30, // 30 seconds
+	})
 	app.Use(recover.New())
 
 	api := app.Group("/api")
