@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"preferred/utils"
@@ -76,9 +77,37 @@ func (h TracingHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 	}
 }
 
-var Logger zerolog.Logger
+var mylogger zerolog.Logger
 
 func init() {
-	Logger = zerolog.New(os.Stdout)
-	Logger = Logger.Hook(TracingHook{})
+	mylogger = zerolog.New(os.Stdout)
+	mylogger = mylogger.Hook(TracingHook{})
+}
+
+func WithContext(ctx context.Context) context.Context {
+	return mylogger.WithContext(ctx)
+}
+
+func Error() *zerolog.Event {
+	return mylogger.Error()
+}
+
+func Info() *zerolog.Event {
+	return mylogger.Info()
+}
+
+func Debug() *zerolog.Event {
+	return mylogger.Debug()
+}
+
+func Warn() *zerolog.Event {
+	return mylogger.Warn()
+}
+
+func Trace() *zerolog.Event {
+	return mylogger.Trace()
+}
+
+func Fatal() *zerolog.Event {
+	return mylogger.Fatal()
 }

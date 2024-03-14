@@ -6,8 +6,6 @@ import (
 	"preferred/utils"
 	"preferred/utils/logger"
 
-	"github.com/rs/zerolog/log"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/healthcheck"
@@ -34,7 +32,7 @@ func main() {
 			// Set Content-Type: text/plain; charset=utf-8
 			c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
 
-			logger.Logger.Error().Ctx(c.UserContext()).Err(err).Int("code", code).Msg("Error occurred")
+			logger.Error().Ctx(c.UserContext()).Err(err).Int("code", code).Msg("Error occurred")
 
 			// Return status code with error message
 			return c.Status(code).SendString(err.Error())
@@ -47,7 +45,7 @@ func main() {
 	// Add request ID
 	app.Use(func(c *fiber.Ctx) error {
 		ctx := context.WithValue(c.UserContext(), utils.TraceId, fiberutils.UUID())
-		ctx = logger.Logger.WithContext(ctx)
+		ctx = logger.WithContext(ctx)
 		c.SetUserContext(ctx)
 
 		return c.Next()
@@ -78,13 +76,13 @@ func main() {
 	})
 
 	api.Get("/error", func(c *fiber.Ctx) error {
-		logger.Logger.Info().Ctx(c.UserContext()).Msg("before error")
+		logger.Info().Ctx(c.UserContext()).Msg("before error")
 		return fiber.NewError(fiber.StatusTeapot, "I'm a teapot")
 	})
 
 	// Listen on port 3000
 	err := app.Listen(":3000")
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to start server")
+		logger.Fatal().Err(err).Msg("Failed to start server")
 	}
 }
