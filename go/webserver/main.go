@@ -8,6 +8,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/etag"
+	"github.com/gofiber/fiber/v2/middleware/healthcheck"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
@@ -41,6 +42,12 @@ func main() {
 
 	// Add ETag support
 	app.Use(etag.New())
+
+	// Add health check
+	app.Use(healthcheck.New(healthcheck.Config{
+		LivenessEndpoint:  "/livez",
+		ReadinessEndpoint: "/readyz",
+	}))
 
 	// Serve static files
 	app.Static("/", "./public", fiber.Static{
