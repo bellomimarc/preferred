@@ -38,7 +38,8 @@ func main() {
 	app.Static("/", "./public")
 	app.Use(recover.New())
 
-	app.Get("/api", func(c *fiber.Ctx) error {
+	api := app.Group("/api")
+	api.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
 
