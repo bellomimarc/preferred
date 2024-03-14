@@ -3,6 +3,7 @@ package logger
 import (
 	"fmt"
 	"os"
+	"preferred/utils"
 	"strings"
 
 	"github.com/rs/zerolog"
@@ -64,4 +65,20 @@ func InitLog() {
 	setLoggingMode(os.Getenv("LOG_MODE"))
 }
 
-var Logger = log.Logger
+type TracingHook struct{}
+
+func (h TracingHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
+	ctx := e.GetCtx()
+
+	value := ctx.Value(utils.TraceId)
+	if value != nil {
+		e.Str("t_id", value.(string))
+	}
+}
+
+var Logger zerolog.Logger
+
+func init() {
+	Logger = zerolog.New(os.Stdout)
+	Logger = Logger.Hook(TracingHook{})
+}
