@@ -36,9 +36,8 @@ func main() {
 	})
 
 	app.Static("/", "./public", fiber.Static{
-		Compress:      true,
-		CacheDuration: 10,
-		MaxAge:        30, // 30 seconds
+		Compress: true,
+		MaxAge:   30, // 30 seconds
 	})
 	app.Use(recover.New())
 
