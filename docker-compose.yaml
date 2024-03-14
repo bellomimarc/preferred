@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   postgresql:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     # command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
     environment:
       POSTGRES_USER: "livecoding"
@@ -13,7 +13,7 @@ services:
       - "5555:5432" # expose port for localdevelpment
     restart: always
   redis:
-    image: redis:7-alpine
+    image: redis:7.2.4-alpine3.19
     ports:
       - "6666:6379"
     restart: always
