@@ -75,11 +75,6 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	api.Get("/error", func(c *fiber.Ctx) error {
-		logger.Info().Ctx(c.UserContext()).Msg("before error")
-		return fiber.NewError(fiber.StatusTeapot, "I'm a teapot")
-	})
-
 	// Listen on port 3000
 	err := app.Listen(":3000")
 	if err != nil {
