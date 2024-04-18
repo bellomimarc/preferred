@@ -12,12 +12,18 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/helmet"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	fiberutils "github.com/gofiber/fiber/v2/utils"
+	"github.com/gofiber/template/html/v2"
 )
 
 func main() {
 	logger.InitLog()
 
+	engine := html.New("./views", ".html")
+
 	app := fiber.New(fiber.Config{
+		// Set the html view engine
+		Views:       engine,
+		ViewsLayout: "layouts/main",
 		// Override default error handler
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			// Status code defaults to 500
@@ -63,8 +69,29 @@ func main() {
 	// Add ETag support
 	app.Use(etag.New())
 
+	app.Get("/", func(c *fiber.Ctx) error {
+		// Render index
+		return c.Render("index", fiber.Map{
+			"Title": "Hello, World!",
+		})
+	})
+
+	app.Get("/layout", func(c *fiber.Ctx) error {
+		// Render index within layouts/main
+		return c.Render("index", fiber.Map{
+			"Title": "Hello, World!",
+		}, "layouts/another-layout")
+	})
+
+	app.Get("/layouts-nested", func(c *fiber.Ctx) error {
+		// Render index within layouts/nested/main within layouts/nested/base
+		return c.Render("index", fiber.Map{
+			"Title": "Hello, World!",
+		}, "layouts/main", "layouts/nested/base")
+	})
+
 	// Serve static files
-	app.Static("/", "./public", fiber.Static{
+	app.Static("/public", "./public", fiber.Static{
 		Compress: true,
 		MaxAge:   30, // 30 seconds
 	})
