@@ -3,7 +3,7 @@ module preferred
 go 1.21.6
 
 require (
-	github.com/gofiber/fiber/v2 v2.52.2
+	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/rs/zerolog v1.32.0
 )
 
